@@ -5,7 +5,7 @@ const Feature = () => {
     <div>
       <section
         id="features"
-        className="py-16 px-4 md:px-6 dark:bg-gray-900 bg-white "
+        className="py-16 px-4 md:px-6 dark:bg-gray-900 bg-white transition-colors duration-300"
       >
         <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
@@ -47,7 +47,7 @@ const Feature = () => {
               <h3 className="text-xl font-semibold mb-3">Local Insights</h3>
               <p className="dark:text-gray-300 text-gray-600 ">
                 Discover hidden gems and authentic experiences with
-                recommendations from our AI trained on local knowledge.
+                recommendations from our AI.
               </p>
             </div>
           </div>

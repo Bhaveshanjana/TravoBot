@@ -5,9 +5,9 @@ const Work = () => {
     <div>
       <section
         id="how-it-works"
-        className="py-16 px-4 md:px-0 mx-6 rounded-xl dark:bg-gray-800 bg-gray-100"
+        className="py-9 px-4 md:px-0 mx-6 rounded-xl dark:bg-gray-800 bg-gray-100 transition-colors duration-300"
       >
-        <div className="container mx-auto">
+        <div className="mx-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-9">
             How It Works
           </h2>
