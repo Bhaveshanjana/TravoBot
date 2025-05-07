@@ -25,7 +25,7 @@ const DarkMode = () => {
         className="cursor-pointer p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-500 transition-all duration-200"
         aria-label="Toggle theme"
       >
-        {theme === "dark" ? <Moon size={17} /> : <Sun size={17} />}
+        {theme === "dark" ? <Sun size={17}  /> :<Moon size={17}  />}
       </button>
     </div>
   );

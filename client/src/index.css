@@ -1,3 +1,8 @@
 @import "tailwindcss";
 
+/* initail's for dark mode */
 @custom-variant dark (&:where(.dark, .dark *));
+
+body{
+    font-family: "Gothic A1", sans-serif;
+}
