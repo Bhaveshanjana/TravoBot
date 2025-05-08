@@ -8,13 +8,18 @@ import {
   DollarSign,
 } from "lucide-react";
 import DarkMode from "../components/Mode";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function TripGeneratorForm() {
   const [destination, setDestination] = useState("");
   const [days, setDays] = useState("");
-  const [budget, setBudget] = useState("moderate");
-  const [travelers, setTravelers] = useState("solo");
+  const [budget, setBudget] = useState("");
+  const [travelers, setTravelers] = useState("");
   const [formValid, setFormValid] = useState(false);
+
+  const navigate = useNavigate();
 
   // Popular destinations list
   const popularDestinations = [
@@ -39,6 +44,34 @@ export default function TripGeneratorForm() {
     }
   }, [destination, days, budget, travelers]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const toastId = toast.info("Generating trip, please wait...", {
+      autoClose: false, 
+      closeOnClick: false, 
+      draggable: false,
+    });
+    const newTrip = {
+      destination: destination,
+      days: days,
+      budget: budget,
+      travelers: travelers,
+    };
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/plan-trip`,
+        newTrip
+      );
+      const tripData = res.data;
+      toast.dismiss(toastId);
+      toast.success("Trip generated successfully !");
+      navigate("/trip-detail", { state: { trip: tripData } });
+    } catch (error) {
+      toast.error("Faild to generate trip");
+      console.log(error);
+    }
+  };
   return (
     <div className="min-h-screen transition-colors duration-300 dark:bg-gray-900 dark:text-white bg-gray-50 text-gray-900">
       {/* Navigation */}
@@ -71,7 +104,7 @@ export default function TripGeneratorForm() {
             generate a customized itinerary based on your preferences.
           </p>
 
-          <form className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Destination */}
             <div>
               <label
@@ -122,7 +155,7 @@ export default function TripGeneratorForm() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div
                   className={`cursor-pointer rounded-xl p-4 border-2 transition-all duration-200 flex flex-col items-center hover:shadow-xl shadow-gray-600 dark:hover:shadow-lg ${
-                    budget === "budget"
+                    budget === "Cheap"
                       ? DarkMode
                         ? "border-blue-500 bg-blue-900/20"
                         : "border-red-500 bg-red-50"
@@ -130,7 +163,7 @@ export default function TripGeneratorForm() {
                       ? "border-gray-700 hover:border-gray-600"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
-                  onClick={() => setBudget("budget")}
+                  onClick={() => setBudget("Cheap")}
                 >
                   <div className="mb-3 p-3 rounded-full dark:bg-green-900/30 bg-green-100">
                     <DollarSign className="h-6 w-6 dark:text-green-400 text-green-600" />
