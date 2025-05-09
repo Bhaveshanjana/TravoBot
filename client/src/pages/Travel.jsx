@@ -44,6 +44,7 @@ export default function TripGeneratorForm() {
     }
   }, [destination, days, budget, travelers]);
 
+  // Getting trip data
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = toast.info("Generating trip, please wait...", {
@@ -327,10 +328,10 @@ export default function TripGeneratorForm() {
               <button
                 type="submit"
                 disabled={!formValid}
-                className={`w-full sm:w-auto px-6 py-3 rounded-lg font-medium text-white transition-colors sm:float-end -translate-y-7 cursor-pointer  hover:transition-all duration-200 ${
+                className={`w-full sm:w-auto px-6 py-3 rounded-lg font-medium text-white transition-colors sm:float-end -translate-y-7  hover:transition-all duration-200 ${
                   formValid
                     ? DarkMode
-                      ? "bg-blue-600 hover:bg-blue-500"
+                      ? "bg-blue-600 hover:bg-blue-500 cursor-pointer"
                       : "bg-red-500 hover:bg-red-600"
                     : DarkMode
                     ? "bg-gray-700 cursor-not-allowed"
