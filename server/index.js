@@ -43,6 +43,7 @@ app.post("/api/plan-trip", async (req, res) => {
 const GOOGLE_API_URL = "https://places.googleapis.com/v1/places:searchText";
 const API_KEY = process.env.GOOGLE_API_KEY;
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Function for getting actual image of trip's
 app.post("/search-places", async (req, res) => {
   const { textQuery } = req.body;
@@ -50,23 +51,32 @@ app.post("/search-places", async (req, res) => {
   if (!textQuery) {
     return res.status(400).json({ error: "Query is required" });
   }
+  const responses = [];
   try {
-    const apiResponse = await axios.post(
-      GOOGLE_API_URL,
-      {
-        textQuery,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": API_KEY,
-          "X-Goog-FieldMask":
-            "places.displayName,places.formattedAddress,places.photos",
-        },
-      }
-    );
+    for (const query of textQuery) {
+      const apiRes = await axios.post(
+        "https://places.googleapis.com/v1/places:searchText",
+        { textQuery: query },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": process.env.GOOGLE_API_KEY,
+            "X-Goog-FieldMask":
+              "places.displayName,places.formattedAddress,places.photos",
+          },
+        }
+      );
 
-    res.status(200).json(apiResponse.data);
+      responses.push({
+        query,
+        place: apiRes.data.places?.[0] || null,
+      });
+
+      // Wait 300ms before next request
+      await delay(300);
+    }
+
+    res.status(200).json(responses);
   } catch (error) {
     console.error("Error fetching Google Places data:", error.message);
     res.status(500).json({ error: "Failed to fetch place data" });
