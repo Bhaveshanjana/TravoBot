@@ -14,10 +14,11 @@ import {
 import { useEffect, useState } from "react";
 import DarkMode from "../components/Mode";
 import { Compass } from "lucide-react";
+import { toast } from "react-toastify";
 
 function TripDetails() {
   const [imgUrl, setimgUrl] = useState();
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState();
   const [activeTab, setActiveTab] = useState("details");
   const location = useLocation();
   const trip = location.state?.trip;
@@ -53,7 +54,6 @@ function TripDetails() {
         `${import.meta.env.VITE_BASE_URL}/search-places`,
         data
       );
-      console.log(res.data);
 
       const results = res.data;
 
@@ -63,7 +63,7 @@ function TripDetails() {
             const photos = place.photos || [];
 
             // Try to get the 4th photo, fallback to 1st
-            const photoName = photos[3]?.name || photos[0]?.name || null;
+            const photoName = photos[3]?.name || photos[0]?.name || photos[5]?.name;
 
             const photoUrl = photoName
               ? PHOTO_REF_URL.replace("{NAME}", photoName)
@@ -73,7 +73,7 @@ function TripDetails() {
         : [];
       setimgUrl(imageResults);
     } catch (error) {
-      console.log(error);
+      toast.error("Error fetching images", error);
     }
   };
 
@@ -98,14 +98,14 @@ function TripDetails() {
             <DarkMode />
           </div>
         </nav>
-        <div className="container mx-auto px-4 py-8 dark:bg-gray-900 bg-gray-50">
-          {/* Featured image */}
+        <div className="container mx-auto px-4 py-8 dark:bg-gray-900 bg-gray-50 mt-5">
+          {/* Featured image's */}
           <div className="mb-8">
             {imgUrl && imgUrl[0] && (
               <img
                 src={imgUrl[0]}
                 alt="Trip destination"
-                className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl shadow-md"
+                className="w-full h-64 sm:h-80 md:h-96  rounded-xl shadow-md"
               />
             )}
           </div>
@@ -114,7 +114,7 @@ function TripDetails() {
           <div className="flex mb-6 border-b dark:border-gray-700">
             <button
               onClick={() => setActiveTab("details")}
-              className={`py-2 px-4 font-medium text-sm ${
+              className={`py-2 px-4 font-medium text-sm cursor-pointer ${
                 activeTab === "details"
                   ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
                   : "text-gray-600 dark:text-gray-400"
@@ -124,7 +124,7 @@ function TripDetails() {
             </button>
             <button
               onClick={() => setActiveTab("hotels")}
-              className={`py-2 px-4 font-medium text-sm ${
+              className={`py-2 px-4 font-medium text-sm cursor-pointer ${
                 activeTab === "hotels"
                   ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
                   : "text-gray-600 dark:text-gray-400"
@@ -134,7 +134,7 @@ function TripDetails() {
             </button>
             <button
               onClick={() => setActiveTab("itinerary")}
-              className={`py-2 px-4 font-medium text-sm ${
+              className={`py-2 px-4 font-medium text-sm cursor-pointer ${
                 activeTab === "itinerary"
                   ? "border-b-2 border-blue-500 text-blue-600 dark:text-blue-400"
                   : "text-gray-600 dark:text-gray-400"
@@ -149,7 +149,7 @@ function TripDetails() {
             {/* Trip Details */}
             {activeTab === "details" && (
               <div
-                className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${
+                className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6  ${
                   darkMode ? "text-white" : "text-gray-700"
                 }`}
               >
@@ -164,10 +164,10 @@ function TripDetails() {
                   <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <Calendar className="text-blue-500 mr-3" size={20} />
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
                         Duration
                       </p>
-                      <p className="font-medium dark:text-gray-400">
+                      <p className="font-medium dark:text-gray-300">
                         {newtrip.trip_details.duration}
                       </p>
                     </div>
@@ -176,10 +176,10 @@ function TripDetails() {
                   <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <Users className="text-blue-500 mr-3" size={20} />
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
                         Travelers
                       </p>
-                      <p className="font-medium dark:text-gray-400">
+                      <p className="font-medium dark:text-gray-300">
                         {newtrip.trip_details.travelers}
                       </p>
                     </div>
@@ -188,10 +188,10 @@ function TripDetails() {
                   <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <DollarSign className="text-blue-500 mr-3" size={20} />
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
                         Budget
                       </p>
-                      <p className="font-medium dark:text-gray-400">
+                      <p className="font-medium dark:text-gray-300">
                         {newtrip.trip_details.budget}
                       </p>
                     </div>
@@ -212,7 +212,7 @@ function TripDetails() {
                   Hotel Options
                 </h2>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 cursor-pointer">
                   {newtrip.hotel_options.map((hotel, index) => (
                     <div
                       key={index}
@@ -266,7 +266,9 @@ function TripDetails() {
               >
                 <h2 className="text-2xl font-semibold flex items-center">
                   <Calendar className="mr-2 text-blue-500" size={24} />
-                  Itinerary
+                  <span className="text-gray-700 dark:text-gray-300">
+                    Itinerary
+                  </span>
                 </h2>
 
                 {newtrip.itinerary.map((dayObj, dayIndex) => {
@@ -279,7 +281,7 @@ function TripDetails() {
                         <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3">
                           {dayIndex + 1}
                         </div>
-                        <h3 className="text-xl font-semibold">
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">
                           {dayKey.replace("_", " ").toUpperCase()}:{" "}
                           {dayPlan.theme}
                         </h3>
@@ -294,7 +296,10 @@ function TripDetails() {
                             {/* Timeline dot */}
                             <div className="absolute w-4 h-4 bg-blue-500 rounded-full -left-6 top-8 border-4 border-white dark:border-gray-900"></div>
 
-                            <h4 className="text-lg font-semibold mb-3">
+                            <h4 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">
+                              <span className="border-b-3 border-cyan-900 ">
+                                Place-Name:
+                              </span>{" "}
                               {place.place_name}
                             </h4>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -307,11 +312,8 @@ function TripDetails() {
                                   className="text-green-500 mr-2"
                                   size={16}
                                 />
-                                <span className="text-sm">
-                                  <span className="text-gray-500 dark:text-gray-400">
-                                    Ticket:{" "}
-                                  </span>
-                                  ${place.ticket_pricing}
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  <span>Ticket: </span>${place.ticket_pricing}
                                 </span>
                               </div>
 
@@ -320,10 +322,8 @@ function TripDetails() {
                                   className="text-yellow-500 mr-2"
                                   size={16}
                                 />
-                                <span className="text-sm">
-                                  <span className="text-gray-500 dark:text-gray-400">
-                                    Rating:{" "}
-                                  </span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  <span>Rating: </span>
                                   {place.rating}
                                 </span>
                               </div>
@@ -333,10 +333,8 @@ function TripDetails() {
                                   className="text-blue-500 mr-2"
                                   size={16}
                                 />
-                                <span className="text-sm">
-                                  <span className="text-gray-500 dark:text-gray-400">
-                                    Duration:{" "}
-                                  </span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  <span>Duration: </span>
                                   {place.time_travel}
                                 </span>
                               </div>
@@ -346,10 +344,8 @@ function TripDetails() {
                                   className="text-orange-500 mr-2"
                                   size={16}
                                 />
-                                <span className="text-sm">
-                                  <span className="text-gray-500 dark:text-gray-400">
-                                    Best Time:{" "}
-                                  </span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">
+                                  <span>Best Time To Visit: </span>
                                   {place.best_time_to_visit}
                                 </span>
                               </div>
@@ -361,7 +357,9 @@ function TripDetails() {
                                   className="text-blue-500 mr-2 flex-shrink-0 mt-1"
                                   size={16}
                                 />
-                                <p className="text-sm italic">{place.notes}</p>
+                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                  Notes: {place.notes}
+                                </p>
                               </div>
                             )}
                           </div>

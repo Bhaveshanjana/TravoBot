@@ -119,7 +119,7 @@ export default function TripGeneratorForm() {
                   id="destination"
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
-                  className="w-full p-3 pr-10 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:focus:border-blue-500 bg-white border-gray-300 focus:border-red-500 focus:outline-none focus:ring-2 dark:focus:ring-blue-500/50 focus:ring-red-500/50"
+                  className="cursor-pointer w-full p-3 pr-10 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:focus:border-blue-500 bg-white border-gray-300 focus:border-red-500 focus:outline-none focus:ring-2 dark:focus:ring-blue-500/50 focus:ring-red-500/50"
                 >
                   <option value="" disabled>
                     Select...
